@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37111.16 d17.14
+VisualStudioVersion = 17.14.37111.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{0063A2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatform.Shared", "Shared\EduPlatform.Shared\EduPlatform.Shared.csproj", "{DCA3D48A-58B4-4CDD-9E8E-1AE462D87F8C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityServer", "{5ABB12A5-18CD-4C83-96E1-3B433148BCBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatform.IdentityServer", "IdentityServer\EduPlatform.IdentityServer\EduPlatform.IdentityServer.csproj", "{311B21AB-39EC-2EB0-2C97-EB27120FA9E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +36,10 @@ Global
 		{DCA3D48A-58B4-4CDD-9E8E-1AE462D87F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCA3D48A-58B4-4CDD-9E8E-1AE462D87F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCA3D48A-58B4-4CDD-9E8E-1AE462D87F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{311B21AB-39EC-2EB0-2C97-EB27120FA9E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{311B21AB-39EC-2EB0-2C97-EB27120FA9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{311B21AB-39EC-2EB0-2C97-EB27120FA9E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{311B21AB-39EC-2EB0-2C97-EB27120FA9E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,6 +48,7 @@ Global
 		{34D849F4-C009-46E2-982D-E51380CD35D5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{232D3680-FD74-47F7-A817-71232E0BA7CF} = {34D849F4-C009-46E2-982D-E51380CD35D5}
 		{DCA3D48A-58B4-4CDD-9E8E-1AE462D87F8C} = {0063A2A7-0C0B-4C67-8755-4258C091D24F}
+		{311B21AB-39EC-2EB0-2C97-EB27120FA9E3} = {5ABB12A5-18CD-4C83-96E1-3B433148BCBA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53980792-0AD2-41FB-B479-3550358AD97E}

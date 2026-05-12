@@ -68,15 +68,16 @@ namespace EduPlatform.Services.Catalog.Services
 		}
 		public async Task<ResponseDto<CreateCouseDto>>CreateAsync(CreateCouseDto p)
 		{
-			var nameExist = await _courseCollection.FindAsync<Course>(x => x.Name == p.Name);
-			if(nameExist is not null)
-			{
-				return ResponseDto<CreateCouseDto>.Fail("İlgili kursa ait isim db'de mevcuttur.", HttpStatusCode.Conflict.GetHashCode());
-			}
+			//var nameExist = await _courseCollection.FindAsync<Course>(x => x.Name == p.Name);
+			//if(nameExist is not null)
+			//{
+			//	return ResponseDto<CreateCouseDto>.Fail("İlgili kursa ait isim db'de mevcuttur.", HttpStatusCode.Conflict.GetHashCode());
+			//}
 			var mapValue = _mapper.Map<Course>(p);
-			mapValue.CreatedDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+			mapValue.CreatedDate = DateTime.Now;
 			await _courseCollection.InsertOneAsync(mapValue);
-			return ResponseDto<CreateCouseDto>.Success(p, HttpStatusCode.Created.GetHashCode());
+			var responseMapping = _mapper.Map<CreateCouseDto>(mapValue);
+			return ResponseDto<CreateCouseDto>.Success(responseMapping, HttpStatusCode.Created.GetHashCode());
 		}
 		public async Task<ResponseDto<NoContent>> UpdateAsync(UpdateCourseDto p)
 		{

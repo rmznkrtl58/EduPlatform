@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EduPlatform.Services.Catalog.Dtos.CategoryDtos;
 using EduPlatform.Services.Catalog.Dtos.CourseDtos;
+using EduPlatform.Services.Catalog.Dtos.FeatureDtos;
 using EduPlatform.Services.Catalog.Entities;
 
 namespace EduPlatform.Services.Catalog.Mapping
@@ -19,6 +20,7 @@ namespace EduPlatform.Services.Catalog.Mapping
 			CreateMap<Category, UpdateCategoryDto>().ReverseMap();
 			//Feature
 			CreateMap<Feature, GetCategoryDto>().ReverseMap();
+			CreateMap<Feature, GetFeatureDto>().ReverseMap();
 			//CreateMap<Feature, CreateFeatureDto>().ReverseMap();
 			//CreateMap<Feature, UpdateFeatureDto>().ReverseMap();
 		}

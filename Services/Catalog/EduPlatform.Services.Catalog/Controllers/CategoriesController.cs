@@ -3,8 +3,6 @@ using EduPlatform.Services.Catalog.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace EduPlatform.Services.Catalog.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
 	public class CategoriesController : CustomBaseController
 	{
 		private readonly ICategoryService _cService;

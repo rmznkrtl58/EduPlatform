@@ -17,7 +17,7 @@ namespace EduPlatform.Services.Catalog.Controllers
 			return CreateActionResultInstance(response);
 		}
 		[HttpGet]
-		public async Task<IActionResult> GetAll(string id)
+		public async Task<IActionResult> GetAll()
 		{
 			var response = await _courseService.GetListAllAsync();
 			return CreateActionResultInstance(response);
