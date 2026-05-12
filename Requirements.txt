@@ -1,7 +1,8 @@
 Portlar:
 {
-Catalog Api:5011
 Identity Api:5001
+Catalog Api:5011
+Photo Stock:5012
 }
 UserName = "rmznkrtl",
 Email = "rmznkrtl@gmail.com",

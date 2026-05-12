@@ -32,7 +32,7 @@ namespace EduPlatform.IdentityServer
             {
             new ApiScope("catalog_fullpermission","Catalog Api için full erişim"),
             new ApiScope("photo_stock_fullpermission","Photo Stock Api için full erişim"),
-            new ApiScope(IdentityServerConstants.LocalApi.ScopeName,"IdentityServer için erişim")
+            new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
             };
 
 
@@ -42,7 +42,7 @@ namespace EduPlatform.IdentityServer
             {
                 new ApiResource("resource_catalog"){Scopes={"catalog_fullpermission" } },
                 new ApiResource("resource_photo_Stock"){Scopes={"photo_stock_fullpermission" } },
-                new ApiResource(IdentityServerConstants.LocalApi.ScopeName){ }
+                new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
             };
 
 
@@ -75,7 +75,7 @@ namespace EduPlatform.IdentityServer
 				       },
                    AccessTokenLifetime=1*60*60,//1 saat
                    RefreshTokenExpiration=TokenExpiration.Absolute,//kesin tarih değişme yok.
-                   AbsoluteRefreshTokenLifetime=(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds.GetHashCode(),//60 gün
+                   AbsoluteRefreshTokenLifetime=(int) (DateTime.Now.AddDays(60)- DateTime.Now).TotalSeconds,//60 gün
                    RefreshTokenUsage=TokenUsage.ReUse,//aynı refreh token kullanılabilsinmi evet
 			   }
 			};
