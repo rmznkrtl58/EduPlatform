@@ -3,6 +3,7 @@ Portlar:
 Identity Api:5001
 Catalog Api:5011
 Photo Stock:5012
+basket:5013
 }
 UserName = "rmznkrtl",
 Email = "rmznkrtl@gmail.com",

@@ -32,6 +32,7 @@ namespace EduPlatform.IdentityServer
             {
             new ApiScope("catalog_fullpermission","Catalog Api için full erişim"),
             new ApiScope("photo_stock_fullpermission","Photo Stock Api için full erişim"),
+            new ApiScope("basket_fullpermission","Basket Api için full erişim"),
             new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
             };
 
@@ -42,6 +43,7 @@ namespace EduPlatform.IdentityServer
             {
                 new ApiResource("resource_catalog"){Scopes={"catalog_fullpermission" } },
                 new ApiResource("resource_photo_Stock"){Scopes={"photo_stock_fullpermission" } },
+                new ApiResource("resource_basket"){Scopes={"basket_fullpermission" } },
                 new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
             };
 
@@ -66,7 +68,8 @@ namespace EduPlatform.IdentityServer
                    ClientSecrets={new Secret("secretforuser123".Sha256())},
                    AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
 				   AllowedScopes={
-                       IdentityServerConstants.StandardScopes.OpenId,
+					   "basket_fullpermission",
+					   IdentityServerConstants.StandardScopes.OpenId,
                        IdentityServerConstants.StandardScopes.Email,
                        IdentityServerConstants.StandardScopes.Profile,
                        IdentityServerConstants.StandardScopes.OfflineAccess,//olmak zorunda refresh token için
