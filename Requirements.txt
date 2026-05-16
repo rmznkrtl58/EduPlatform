@@ -6,6 +6,9 @@ Photo Stock:5012
 basket:5013
 Discount:5014
 Order:5015
+FakePayment:5016
+gateway:5000
+FrontEnd:5010
 }
 UserName = "rmznkrtl",
 Email = "rmznkrtl@gmail.com",
