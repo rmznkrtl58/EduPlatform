@@ -10,12 +10,11 @@ namespace EduPlatform.IdentityServer.Controllers
 	public class UserController : CustomBaseController
 	{
 		private readonly IUserService _userService;
-
 		public UserController(IUserService userService)
 		{
 			_userService = userService;
+			
 		}
-
 		[HttpPost]
 		public async Task<IActionResult> CreateUser(CreateUserDto p)
 		{
@@ -27,6 +26,7 @@ namespace EduPlatform.IdentityServer.Controllers
 			var response= await _userService.GetUserInformationAsync(HttpContext);
 			return CreateActionResultInstance(response);
 		}
+		
 	}
 }
 

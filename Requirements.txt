@@ -4,6 +4,8 @@ Identity Api:5001
 Catalog Api:5011
 Photo Stock:5012
 basket:5013
+Discount:5014
+Order:5015
 }
 UserName = "rmznkrtl",
 Email = "rmznkrtl@gmail.com",
