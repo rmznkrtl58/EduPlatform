@@ -48,7 +48,11 @@ namespace EduPlatform.IdentityServer
                 new ApiResource("resource_catalog"){Scopes={"catalog_fullpermission" } },
                 new ApiResource("resource_photo_Stock"){Scopes={"photo_stock_fullpermission" } },
                 new ApiResource("resource_basket"){Scopes={"basket_fullpermission" } },
-                new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
+				new ApiResource("resource_discount"){Scopes={ "discount_fullpermission" } },
+				new ApiResource("resource_order"){Scopes={ "order_fullpermission" } },
+				new ApiResource("resource_fake_payment"){Scopes={ "fake_Payment_fullpermission" } },
+				new ApiResource("resource_gateway"){Scopes={ "gateway_fullpermission" } },
+				new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
             };
 
 
