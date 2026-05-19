@@ -1,4 +1,4 @@
-﻿using EduPlatform.Web.Models;
+﻿using EduPlatform.Web.Models.Other;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

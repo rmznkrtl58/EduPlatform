@@ -1,4 +1,4 @@
-namespace EduPlatform.Web.Models
+namespace EduPlatform.Web.Models.Other
 {
 	public class ErrorViewModel
 	{

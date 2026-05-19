@@ -1,5 +1,5 @@
 ﻿using EduPlatform.Shared.Dtos;
-using EduPlatform.Web.Models;
+using EduPlatform.Web.Models.AuthViewModels;
 using EduPlatform.Web.Options;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
@@ -28,14 +28,90 @@ namespace EduPlatform.Web.Services.IdentityServices
 			_serviceApiSettings= serviceApiSettings.Value;
 		}
 
-		public Task<TokenResponse> GetAccessTokenByRefreshToken()
+		public async Task<TokenResponse> GetAccessTokenByRefreshToken()
 		{
-			throw new NotImplementedException();
+			//yeni bir refresh tokenimle hem cookieyi güncelliyorum hemde yeni bir access token alıyorum.
+
+			//Identity Server endpintlere ulaşma
+			var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest()
+			{
+				Address = _serviceApiSettings.IdentityBaseUri,
+				//http üzerinden istek atacağımız için false set ettim.
+				Policy = new DiscoveryPolicy() { RequireHttps = false }
+			});
+			if (disco.IsError) throw disco.Exception;
+
+			var refreshToken = await _contextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+			var refreshTokenRequest = new RefreshTokenRequest()
+			{
+				ClientId = _clientSettings.WebClientForUser.ClientId,
+				ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
+				RefreshToken = refreshToken,
+				Address = disco.TokenEndpoint
+			};
+			var token = await _httpClient.RequestRefreshTokenAsync(refreshTokenRequest);
+			if(token.IsError)
+			{
+				new ErrorDto()
+				{
+					Errors = new List<string> { "Refresh Token oluşturmada hata oluştu" }
+				};
+			}
+			
+			var authenticationTokens=new List<AuthenticationToken>()
+			{
+				new AuthenticationToken()
+				{
+					Name=OpenIdConnectParameterNames.AccessToken,
+					Value=token.AccessToken
+				},
+				new AuthenticationToken()
+				{
+					Name=OpenIdConnectParameterNames.RefreshToken,
+					Value=token.RefreshToken
+				},
+				new AuthenticationToken()
+				{
+					Name=OpenIdConnectParameterNames.ExpiresIn,
+					Value=DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o",CultureInfo.InvariantCulture)
+				}
+			};
+			//Authentice olmuş kullanıcının bilgilerini cookiden aldık.
+			var authenticationResult = await _contextAccessor.HttpContext.AuthenticateAsync();
+			var properties = authenticationResult.Properties;
+			properties.StoreTokens(authenticationTokens);
+
+			await _contextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, authenticationResult.Principal, properties);
+
+			return token;
+
 		}
 
-		public Task RevokeRefreshToken()
+		public async Task RevokeRefreshToken()
 		{
-			throw new NotImplementedException();
+			//Kullanıcı çıkış yaptıktan sonra refresh token memoryden,db'den veya cookieden silmemiz gerek.
+
+			//IdentityServerin belli başlı endpointlerine ulaşmak için,
+			var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest()
+			{
+				Address = _serviceApiSettings.IdentityBaseUri,
+				//http üzerinden istek atacağımız için false set ettim.
+				Policy = new DiscoveryPolicy() { RequireHttps = false }
+			});
+			if (disco.IsError) throw disco.Exception;
+
+			var refreshToken = await _contextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+			TokenRevocationRequest tokenRevocationRequest = new TokenRevocationRequest()
+			{
+				ClientId = _clientSettings.WebClientForUser.ClientId,
+				ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
+				Address = disco.RevocationEndpoint,
+				Token = refreshToken,
+				TokenTypeHint ="refresh_token"
+			};
+
+			await _httpClient.RevokeTokenAsync(tokenRevocationRequest);
+
 		}
 
 		public async Task<ResponseDto<bool>> SignIn(SignInRequestModel p)
@@ -111,6 +187,11 @@ namespace EduPlatform.Web.Services.IdentityServices
 
 			await _contextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authenticationProperties);
 			return ResponseDto<bool>.Success(true, HttpStatusCode.OK.GetHashCode());
+		}
+		public async  Task LogOut()
+		{
+			await _contextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			await RevokeRefreshToken();
 		}
 	}
 }

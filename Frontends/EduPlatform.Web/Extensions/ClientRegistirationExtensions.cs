@@ -1,5 +1,10 @@
-﻿using EduPlatform.Web.Options;
+﻿using EduPlatform.Shared.Services;
+using EduPlatform.Web.Handlers.ResourceOwnerCredentialHandler;
+using EduPlatform.Web.Options;
+using EduPlatform.Web.Services.CatalogServices.CategoryServices;
+using EduPlatform.Web.Services.CatalogServices.CourseServices;
 using EduPlatform.Web.Services.IdentityServices;
+using EduPlatform.Web.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace EduPlatform.Web.Extensions
@@ -16,12 +21,27 @@ namespace EduPlatform.Web.Extensions
 			// Add services to the container.
 			services.AddControllersWithViews();
 			//ServiceApiSettings classımı DI'de IOptions ile geçtiğimde direk set edecek
-			services.Configure<ServiceApiOptions>(configuration.GetSection(ServiceApiOptions.Key));
+		    services.Configure<ServiceApiOptions>(configuration.GetSection(ServiceApiOptions.Key));
 			services.Configure<ClientSettingOptions>(configuration.GetSection(ClientSettingOptions.Key));
 			//IIdentity Service&Identity Service
 			services.AddHttpContextAccessor();
             //scoped olarakta geçebilirdik ama classımın içinde httplicent kullandığım için böyle yazmam best practice
 			services.AddHttpClient<IIdentityService, IdentityService>();
+			var serviceApiSettings=configuration.GetSection(ServiceApiOptions.Key).Get<ServiceApiOptions>();
+			services.AddHttpClient<IUserService, UserService>(opt =>
+			{
+				opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
+			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
+			services.AddHttpClient<ICourseService, CourseService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
+			});
+			services.AddHttpClient<ICategoryService, CategoryService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
+			});
+			services.AddScoped<ResourceOwnerTokenHandler>();
+			services.AddScoped<ISharedIdentityService,SharedIdentityService>();
 			//CookieBasedAuthentication
 			services.AddAuthentication(AuthSheme).AddCookie(AuthSheme, opt =>
 			{
@@ -30,7 +50,6 @@ namespace EduPlatform.Web.Extensions
 				opt.SlidingExpiration = true;
 				opt.Cookie.Name = "udemywebcookie";
 			});
-
 			return services;
 		}
 

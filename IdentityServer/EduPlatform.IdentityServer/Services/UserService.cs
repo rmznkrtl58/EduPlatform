@@ -38,14 +38,14 @@ namespace EduPlatform.IdentityServer.Services
 			return ResponseDto<ResponseMessageDto>.Success(new ResponseMessageDto() { Message=$"Kullanıcı Kaydı Başarıyla Gerçekleşti.Kayıt Olunan Kullanıcının Id'si: {newUser.Id}"}, HttpStatusCode.Created.GetHashCode());
 		}
 
-		public async Task<ResponseDto<GetUserInfoDto>> GetUserInformationAsync(HttpContext httpContext)
+		public async Task<GetUserInfoDto> GetUserInformationAsync(HttpContext httpContext)
 		{
 			//acces tokenimden gelen sub yani Id değerini aldım
 			var userIdClaim = httpContext.User.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub);
-			if (userIdClaim is null) return  ResponseDto<GetUserInfoDto>.Fail("Tokenden Gelen Id geçersizdir.", HttpStatusCode.BadRequest.GetHashCode());
+			//if (userIdClaim is null) return ResponseDto<GetUserInfoDto>.Fail("Tokenden Gelen Id geçersizdir.", HttpStatusCode.BadRequest.GetHashCode());
 
 			var user =await _userManager.FindByIdAsync(userIdClaim.Value);
-			if(user is null)return ResponseDto<GetUserInfoDto>.Fail("Tokenden Gelen Id değerine ait kullanıcı yoktur.", HttpStatusCode.BadRequest.GetHashCode());
+			//if(user is null)return ResponseDto<GetUserInfoDto>.Fail("Tokenden Gelen Id değerine ait kullanıcı yoktur.", HttpStatusCode.BadRequest.GetHashCode());
 
 			var responseMessage = new GetUserInfoDto()
 			{
@@ -54,7 +54,8 @@ namespace EduPlatform.IdentityServer.Services
 				UserId = user.Id,
 				UserName = user.UserName
 			};
-			return ResponseDto<GetUserInfoDto>.Success(responseMessage,HttpStatusCode.OK.GetHashCode());
+			return responseMessage;
+			//Bir ayar çekeceğim şimdilik kalsın responseDto döndüğüm için front end tarafta json deserialize edemiyor bakacam bir çaresine
 		}
 	}
 }

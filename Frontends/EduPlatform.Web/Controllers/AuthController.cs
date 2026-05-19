@@ -1,4 +1,4 @@
-﻿using EduPlatform.Web.Models;
+﻿using EduPlatform.Web.Models.AuthViewModels;
 using EduPlatform.Web.Services.IdentityServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +18,6 @@ namespace EduPlatform.Web.Controllers
 		{
 			return View();
 		}
-
 		[HttpPost]
 		public async Task<IActionResult> SignIn(SignInRequestModel p)
 		{
@@ -32,6 +31,11 @@ namespace EduPlatform.Web.Controllers
 				});
 				return View();
 			}
+			return RedirectToAction("Index", "Home");
+		}
+		public async Task<IActionResult> LogOut()
+		{
+			await _identityService.LogOut();
 			return RedirectToAction("Index", "Home");
 		}
 	}

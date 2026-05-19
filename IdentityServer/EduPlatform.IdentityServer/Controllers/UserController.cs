@@ -24,7 +24,8 @@ namespace EduPlatform.IdentityServer.Controllers
 		public async Task<IActionResult> GetUserInfo()
 		{
 			var response= await _userService.GetUserInformationAsync(HttpContext);
-			return CreateActionResultInstance(response);
+			
+			return Ok(response);
 		}
 		
 	}

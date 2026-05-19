@@ -1,5 +1,5 @@
 ﻿using EduPlatform.Shared.Dtos;
-using EduPlatform.Web.Models;
+using EduPlatform.Web.Models.AuthViewModels;
 using IdentityModel.Client;
 
 namespace EduPlatform.Web.Services.IdentityServices
@@ -10,5 +10,6 @@ namespace EduPlatform.Web.Services.IdentityServices
 		Task<TokenResponse> GetAccessTokenByRefreshToken();
 		//Logout olduğunda kullanıcının dbde tutulan refresh tokeni uçuralım
 		Task RevokeRefreshToken();
+		Task LogOut();
 	}
 }

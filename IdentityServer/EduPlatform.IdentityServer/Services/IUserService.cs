@@ -9,6 +9,6 @@ namespace EduPlatform.IdentityServer.Services
 	public interface IUserService
 	{
 		Task<ResponseDto<ResponseMessageDto>> CreateUserAsync(CreateUserDto p);
-		Task<ResponseDto<GetUserInfoDto>> GetUserInformationAsync(HttpContext httpContext);
+		Task<GetUserInfoDto> GetUserInformationAsync(HttpContext httpContext);
 	}
 }

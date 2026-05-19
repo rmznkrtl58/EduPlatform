@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduPlatform.Web.Models
+namespace EduPlatform.Web.Models.AuthViewModels
 {
 	public class SignInRequestModel
 	{
