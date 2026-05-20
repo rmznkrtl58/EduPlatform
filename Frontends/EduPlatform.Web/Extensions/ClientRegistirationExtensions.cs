@@ -1,8 +1,10 @@
 ﻿using EduPlatform.Shared.Services;
+using EduPlatform.Web.Handlers.ClientCredentialHandler;
 using EduPlatform.Web.Handlers.ResourceOwnerCredentialHandler;
 using EduPlatform.Web.Options;
 using EduPlatform.Web.Services.CatalogServices.CategoryServices;
 using EduPlatform.Web.Services.CatalogServices.CourseServices;
+using EduPlatform.Web.Services.ClientCredentialServices;
 using EduPlatform.Web.Services.IdentityServices;
 using EduPlatform.Web.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -35,13 +37,17 @@ namespace EduPlatform.Web.Extensions
 			services.AddHttpClient<ICourseService, CourseService>(opt =>
 			{
 				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-			});
+			}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 			services.AddHttpClient<ICategoryService, CategoryService>(opt =>
 			{
 				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-			});
+			}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+			services.AddHttpClient<IClientCredentialTokenService,ClientCredentialTokenService>();
 			services.AddScoped<ResourceOwnerTokenHandler>();
+			services.AddScoped<ClientCredentialTokenHandler>();
 			services.AddScoped<ISharedIdentityService,SharedIdentityService>();
+			//IClientAccessTokenCache işlemlerinin çalışması için.
+			services.AddAccessTokenManagement();
 			//CookieBasedAuthentication
 			services.AddAuthentication(AuthSheme).AddCookie(AuthSheme, opt =>
 			{

@@ -6,11 +6,11 @@ namespace EduPlatform.Shared.Dtos
 	public class ResponseDto<T>
 	{
 		//private set,sadece buradan set ediliyor dışardan kimse set edemez.
-		public T Data { get;private set; }
+		public T Data { get; set; }
 		[JsonIgnore]
-		public int StatusCode { get; private set; }
+		public int StatusCode { get;  set; }
 		[JsonIgnore]
-		public bool IsSuccessFul { get; private set; }
+		public bool IsSuccessFul { get;  set; }
 		public List<string> Errors { get; set; }
 		
 		//Static Factory Metods

@@ -51,7 +51,7 @@ namespace EduPlatform.Web.Services.CatalogServices.CourseServices
 
 		public async Task<bool> UpdateAsync(UpdateCourseRequest p)
 		{
-			var response = await _httpClient.PostAsJsonAsync<UpdateCourseRequest>("courses", p);
+			var response = await _httpClient.PutAsJsonAsync<UpdateCourseRequest>("courses", p);
 			return response.IsSuccessStatusCode;//zaten başarısız ise false dönecek.
 		}
 	}

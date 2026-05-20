@@ -82,6 +82,7 @@ namespace EduPlatform.Services.Catalog.Services
 		public async Task<ResponseDto<NoContent>> UpdateAsync(UpdateCourseDto p)
 		{
 			var mapValue = _mapper.Map<Course>(p);
+			mapValue.CreatedDate = DateTime.Now;
 			var result = await _courseCollection.FindOneAndReplaceAsync(x => x.Id == p.Id, mapValue);
 			if (result is null) return ResponseDto<NoContent>.Fail("İlgili Id'ye ait course bulunamadı", HttpStatusCode.NotFound.GetHashCode());
 			return ResponseDto<NoContent>.Success(HttpStatusCode.NoContent.GetHashCode());
