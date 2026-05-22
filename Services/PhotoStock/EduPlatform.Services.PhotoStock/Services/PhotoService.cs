@@ -23,7 +23,7 @@ namespace EduPlatform.Services.PhotoStock.Services
 				await imageFile.CopyToAsync(stream, cancellationToken);
 			}
 
-			var returnPath = "images/" + imageFile.FileName;
+			var returnPath =  imageFile.FileName;
 			var responseDto = new ResponsePhotoDto() { Url = returnPath };
 
 			return ResponseDto<ResponsePhotoDto>.Success(responseDto, HttpStatusCode.Created.GetHashCode());

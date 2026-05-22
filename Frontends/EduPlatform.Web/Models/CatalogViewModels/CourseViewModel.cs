@@ -12,5 +12,10 @@
 		public string CategoryId { get; set; }
 		public CategoryViewModel Category { get; set; }
 		public string Description { get; set; }
+		public string ShortDescription
+		{
+			get => Description.Length > 100 ? Description.Substring(0, 100) + "..." : Description;
+		}
+		public string StockPictureUrl { get; set; }
 	}
 }

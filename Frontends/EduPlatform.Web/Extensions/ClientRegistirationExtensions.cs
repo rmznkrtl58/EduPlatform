@@ -1,6 +1,7 @@
 ﻿using EduPlatform.Shared.Services;
 using EduPlatform.Web.Handlers.ClientCredentialHandler;
 using EduPlatform.Web.Handlers.ResourceOwnerCredentialHandler;
+using EduPlatform.Web.Helpers;
 using EduPlatform.Web.Options;
 using EduPlatform.Web.Services.CatalogServices.CategoryServices;
 using EduPlatform.Web.Services.CatalogServices.CourseServices;
@@ -56,6 +57,8 @@ namespace EduPlatform.Web.Extensions
 				opt.SlidingExpiration = true;
 				opt.Cookie.Name = "udemywebcookie";
 			});
+			//PhotoUrl Almak için yapılandırma
+			services.AddSingleton<PhotoHelper>();
 			return services;
 		}
 
@@ -69,8 +72,14 @@ namespace EduPlatform.Web.Extensions
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
 			{
+				//exception fırlayacağı zaman bu sayfaya yönlenecek aslında bunun olayı production
+				//ortamda kullanıcıların gözüne batmadan direk sayfaya yönlenmesi custom yazdığın
+				//exceptionlara göre ayar çekebilirsin zaten bir unauthorize için yazmıştık
+				//bunun burda durması faydalı olacaktır ama denemek istenirse exception testi için 
+				//bu süslü parantezin dışınada çıkıp test edilebilir.
 				app.UseExceptionHandler("/Home/Error");
 			}
+
 			app.UseStaticFiles();
 
 			app.UseRouting();

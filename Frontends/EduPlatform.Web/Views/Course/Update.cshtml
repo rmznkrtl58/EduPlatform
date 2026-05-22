@@ -14,7 +14,9 @@
                     <div asp-validation-summary="ModelOnly"></div>
                     @Html.HiddenFor(x=>x.Id)
                     @Html.HiddenFor(x=>x.UserId)
-                    @Html.HiddenFor(x=>x.Picture)
+                    @Html.HiddenFor(x=>x.Picture)@*Update işlemi için arkada picture url tutuyom.çünkü kullanıcı
+                        Update yaptığında burdaki picture alıp silme işlemi için photostock service göndereceğim.
+                    *@
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label" asp-for="CategoryId"></label>
                         <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.categoryList">
@@ -48,12 +50,12 @@
                         <span class="text-danger" asp-validation-for="Feature.Duration"></span>
                     </div>
 
-                    @*   <div class="mb-3">
+                      <div class="mb-3">
 
                         <label class="form-label" asp-for="PhotoFormFile"></label>
 
                         <input type="file" asp-for="PhotoFormFile" class="form-control" />
-                    </div> *@
+                    </div>
 
                     <button type="submit" class="btn btn-primary">Kurs Güncelle</button>
                 </form>

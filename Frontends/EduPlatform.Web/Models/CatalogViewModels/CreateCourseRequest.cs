@@ -16,5 +16,7 @@ namespace EduPlatform.Web.Models.CatalogViewModels
 		[Display(Name = "Kurs açıklama")]
 		public string Description { get; set; }
 		public string Picture { get; set; }
+		[Display(Name = "Kurs Resim")]
+		public IFormFile PhotoFormFile { get; set; }
 	}
 }
