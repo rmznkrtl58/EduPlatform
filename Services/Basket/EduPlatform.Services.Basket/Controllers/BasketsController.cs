@@ -23,6 +23,7 @@ namespace EduPlatform.Services.Basket.Controllers
 		[HttpPost]
 		public async Task<IActionResult> SaveOrUpdate(BasketDto p)
 		{
+			p.UserId = _identityService.GetUserId;
 			var response = await _basketService.SaveOrUpdate(p);
 			return CreateActionResultInstance(response);
 		}

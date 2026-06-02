@@ -3,47 +3,37 @@ using EduPlatform.Web.Handlers.ClientCredentialHandler;
 using EduPlatform.Web.Handlers.ResourceOwnerCredentialHandler;
 using EduPlatform.Web.Helpers;
 using EduPlatform.Web.Options;
+using EduPlatform.Web.Services.BasketServices;
 using EduPlatform.Web.Services.CatalogServices.CategoryServices;
 using EduPlatform.Web.Services.CatalogServices.CourseServices;
 using EduPlatform.Web.Services.ClientCredentialServices;
+using EduPlatform.Web.Services.DiscountServices;
 using EduPlatform.Web.Services.IdentityServices;
 using EduPlatform.Web.Services.UserServices;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
+using System.Reflection;
 namespace EduPlatform.Web.Extensions
 {
 	public static class ClientRegistirationExtensions
 	{
-
 		private const string AuthSheme = CookieAuthenticationDefaults.AuthenticationScheme; 
-		
-
 		//Servic Registirations
+		//this keywordu kim için extension yazıyorsun demek.
 		public static IServiceCollection AddCoreMvcRegistiration(this IServiceCollection services, IConfiguration configuration)
 		{
+			//AddHttpClient çok tekrarlı kod vardı metod içine çektim
+			AddHttpClients(services,configuration);
 			// Add services to the container.
-			services.AddControllersWithViews();
+			services.AddControllersWithViews().AddFluentValidation(fv =>
+			{   //FluentApi Registiration
+				fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+			});
 			//ServiceApiSettings classımı DI'de IOptions ile geçtiğimde direk set edecek
 		    services.Configure<ServiceApiOptions>(configuration.GetSection(ServiceApiOptions.Key));
 			services.Configure<ClientSettingOptions>(configuration.GetSection(ClientSettingOptions.Key));
 			//IIdentity Service&Identity Service
 			services.AddHttpContextAccessor();
-            //scoped olarakta geçebilirdik ama classımın içinde httplicent kullandığım için böyle yazmam best practice
-			services.AddHttpClient<IIdentityService, IdentityService>();
-			var serviceApiSettings=configuration.GetSection(ServiceApiOptions.Key).Get<ServiceApiOptions>();
-			services.AddHttpClient<IUserService, UserService>(opt =>
-			{
-				opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
-			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
-			services.AddHttpClient<ICourseService, CourseService>(opt =>
-			{
-				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-			}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
-			services.AddHttpClient<ICategoryService, CategoryService>(opt =>
-			{
-				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-			}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
-			services.AddHttpClient<IClientCredentialTokenService,ClientCredentialTokenService>();
 			services.AddScoped<ResourceOwnerTokenHandler>();
 			services.AddScoped<ClientCredentialTokenHandler>();
 			services.AddScoped<ISharedIdentityService,SharedIdentityService>();
@@ -61,10 +51,34 @@ namespace EduPlatform.Web.Extensions
 			services.AddSingleton<PhotoHelper>();
 			return services;
 		}
-
-
-		
-
+		//HttpClients
+		public static void AddHttpClients(IServiceCollection services,IConfiguration configuration)
+		{
+			//scoped olarakta geçebilirdik ama classımın içinde httplicent kullandığım için böyle yazmam best practice
+			services.AddHttpClient<IIdentityService, IdentityService>();
+			var serviceApiSettings=configuration.GetSection(ServiceApiOptions.Key).Get<ServiceApiOptions>();
+			services.AddHttpClient<IUserService, UserService>(opt =>
+			{
+				opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
+			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
+			services.AddHttpClient<IBasketService, BasketService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Basket.Path}");
+			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
+			services.AddHttpClient<IDiscountService, DiscountService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Discount.Path}");
+			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
+			services.AddHttpClient<ICourseService, CourseService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
+			}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+			services.AddHttpClient<ICategoryService, CategoryService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
+			}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+			services.AddHttpClient<IClientCredentialTokenService,ClientCredentialTokenService>();
+		}
 		//Middlewares
 		public static IApplicationBuilder UseConfigurePipelineExt(this WebApplication app)
 		{
