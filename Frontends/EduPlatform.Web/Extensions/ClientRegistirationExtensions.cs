@@ -8,7 +8,9 @@ using EduPlatform.Web.Services.CatalogServices.CategoryServices;
 using EduPlatform.Web.Services.CatalogServices.CourseServices;
 using EduPlatform.Web.Services.ClientCredentialServices;
 using EduPlatform.Web.Services.DiscountServices;
+using EduPlatform.Web.Services.FakePaymentServices;
 using EduPlatform.Web.Services.IdentityServices;
+using EduPlatform.Web.Services.OrderServices;
 using EduPlatform.Web.Services.UserServices;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -64,6 +66,14 @@ namespace EduPlatform.Web.Extensions
 			services.AddHttpClient<IBasketService, BasketService>(opt =>
 			{
 				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Basket.Path}");
+			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
+			services.AddHttpClient<IPaymentService, PaymentService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Payment.Path}");
+			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
+			services.AddHttpClient<IOrderService, OrderService>(opt =>
+			{
+				opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Order.Path}");
 			}).AddHttpMessageHandler<ResourceOwnerTokenHandler>();
 			services.AddHttpClient<IDiscountService, DiscountService>(opt =>
 			{

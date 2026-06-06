@@ -8,9 +8,9 @@ namespace EduPlatform.Services.FakePayment.Controllers
 	{   
 		
 		[HttpPost]
-		public IActionResult ReceivePayment()
+		public IActionResult ReceivePayment(PaymentDto p)
 		{
-			var response = new PaymentResponse() { StatusMessage = "Ödeme Alındı" };
+			var response = new PaymentResponse() { StatusMessage = "Ödeme Alındı",PaymentDto=p };
 			return CreateActionResultInstance(ResponseDto<PaymentResponse>.Success(response, HttpStatusCode.OK.GetHashCode()));
 		}
 	}

@@ -23,6 +23,7 @@ namespace EduPlatform.Services.Order.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateOrder(CreateOrderCommand c)
 		{
+	
 			var response = await _mediator.Send(c);
 			return CreateActionResultInstance(response);
 		}
