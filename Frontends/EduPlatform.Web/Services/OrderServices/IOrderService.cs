@@ -10,7 +10,7 @@ namespace EduPlatform.Web.Services.OrderServices
 		//artık sonucunu beklemeyeceğiz orda sipariş oluşacak.
 		//rabbitmqye göndereceğiz oda kendi mikroservicinde yani order
 		//servicede siparişi oluşturacak.
-		Task SuspendOrder(CheckoutInfoRequest p);
+		Task<OrderSuspendViewModel> SuspendOrder(CheckoutInfoRequest p);
 		//Satın alma geçmişindeki bütün siparişleri aldığım metodum
 		Task<List<OrderViewModel>> GetOrder();
 	}

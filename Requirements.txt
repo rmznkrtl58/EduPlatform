@@ -7,6 +7,7 @@ basket:5013
 Discount:5014
 Order:5015
 FakePayment:5016
+RabbitMQ:5672
 gateway:5000
 FrontEnd:5010
 }

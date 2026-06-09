@@ -79,9 +79,9 @@ namespace EduPlatform.Web.Services.OrderServices
 			}
 
 			//ödeme gerçekleşti :D
-			var orderCreatedViewModel = await response.Content.ReadFromJsonAsync<Response<OrderCreatedViewModel>>();
+			var orderCreatedViewModel = await response.Content.ReadFromJsonAsync<ResponseDto<OrderCreatedViewModel>>();
 
-			orderCreatedViewModel.Data.IsSuccessful = true;
+			orderCreatedViewModel.Data.IsSuccessFul = true;
 			await _basketService.Delete();
 			return orderCreatedViewModel.Data;
 		}
@@ -93,10 +93,41 @@ namespace EduPlatform.Web.Services.OrderServices
 		}
 
 		//sipariş bilgileri rabbitMq'ye gönderilecek.
-		public Task SuspendOrder(CheckoutInfoRequest p)
+		public async Task<OrderSuspendViewModel> SuspendOrder(CheckoutInfoRequest p)
 		{
-		
-			throw new NotImplementedException();
+
+			var basket = await _basketService.GetBasket();
+			var orderCreateInput = new CreateOrderRequest()
+			{
+				BuyerId = _identityService.GetUserId,
+				Address = new AddressCreateRequest { Province = p.Province, District = p.District, Street = p.Street, AddressDetail = p.AddressDetail, ZipKode = p.ZipKode },
+			};
+
+			basket.BasketItems.ForEach(x =>
+			{
+				var orderItem = new OrderItemViewModel { CourseId = x.CourseId, Price = x.CurrentPrice, PictureUrl = "", CourseName = x.CourseName };
+				orderCreateInput.OrderItems.Add(orderItem);
+			});
+
+			var paymentInfoInput = new PaymentInfoRequest()
+			{
+				CardName = p.CardName,
+				CardNumber = p.CardNumber,
+				Expiration = p.Expiration,
+				CVV = p.CVV,
+				TotalPrice = basket.TotalPrice,
+				Order = orderCreateInput
+			};
+
+			var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
+
+			if (!responsePayment)
+			{
+				return new OrderSuspendViewModel() { ErrorMessage = "Ödeme alınamadı", IsSuccessFul = false };
+			}
+
+			await _basketService.Delete();
+			return new OrderSuspendViewModel() { IsSuccessFul = true };
 		}
 	}
 }

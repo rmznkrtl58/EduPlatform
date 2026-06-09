@@ -26,22 +26,31 @@ namespace EduPlatform.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Checkout(CheckoutInfoRequest p)
 		{
-			var orderStatus = await _orderService.CreateOrder(p);
-			if (!orderStatus.IsSuccessFul)
+			//1.yol senkron communication
+			//var orderStatus = await _orderService.CreateOrder(p);
+			
+			//2.yol asenkron communication RabbitMq'lü kullanım
+			var orderSuspendStatus = await _orderService.SuspendOrder(p);
+			if (!orderSuspendStatus.IsSuccessFul)
 			{
 				var basket = await _basketService.GetBasket();
 				ViewBag.basket = basket;
-				ViewBag.error = orderStatus.ErrorMessage;
+				ViewBag.error = orderSuspendStatus.ErrorMessage;
 				return View();
 			}
 
 			//eğerki ödeme başarılıysa ilgili sayfaya yönlendir.
-			return RedirectToAction("SuccessfulCheckout", new { orderId=orderStatus.OrderId});
+			//return RedirectToAction("SuccessfulCheckout", new { orderId= orderStatus.OrderId});
+			return RedirectToAction("SuccessfulCheckout", new { orderId= new Random().Next(1,1000)});
 		}
-		public async Task<IActionResult> SuccessfulCheckout(int orderId)
+		public IActionResult SuccessfulCheckout(int orderId)
 		{
 			ViewBag.orderId = orderId;
 			return View();
+		}
+		public async Task<IActionResult> CheckoutHistory()
+		{
+			return View(await _orderService.GetOrder());
 		}
 
 	}
