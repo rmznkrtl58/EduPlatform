@@ -3,6 +3,8 @@ using EduPlatform.Services.Catalog.Dtos.CourseDtos;
 using EduPlatform.Services.Catalog.Entities;
 using EduPlatform.Services.Catalog.Settings;
 using EduPlatform.Shared.Dtos;
+using EduPlatform.Shared.Messages;
+using MassTransit;
 using MongoDB.Driver;
 using System.Net;
 
@@ -13,13 +15,15 @@ namespace EduPlatform.Services.Catalog.Services
 		private readonly IMongoCollection<Course> _courseCollection;
 		private readonly IMongoCollection<Category> _categoryCollection;
 		private readonly IMapper _mapper;
-		public CourseService(IMapper mapper, IDatabaseSettings databaseSettings)
+		private readonly IPublishEndpoint _publishEndpoint;
+		public CourseService(IMapper mapper, IDatabaseSettings databaseSettings, IPublishEndpoint publishEndpoint)
 		{
 			_mapper = mapper;
 			var client = new MongoClient(databaseSettings.ConnectionString);
 			var db = client.GetDatabase(databaseSettings.DatabaseName);
 			_courseCollection = db.GetCollection<Course>(databaseSettings.CourseCollectionName);
 			_categoryCollection = db.GetCollection<Category>(databaseSettings.CategoryCollectionName);
+			_publishEndpoint = publishEndpoint;
 		}
 		public async Task<ResponseDto<IEnumerable<GetCourseDto>>> GetListAllAsync()
 		{
@@ -85,6 +89,16 @@ namespace EduPlatform.Services.Catalog.Services
 			mapValue.CreatedDate = DateTime.Now;
 			var result = await _courseCollection.FindOneAndReplaceAsync(x => x.Id == p.Id, mapValue);
 			if (result is null) return ResponseDto<NoContent>.Fail("İlgili Id'ye ait course bulunamadı", HttpStatusCode.NotFound.GetHashCode());
+			//RabbitMQ'ye kuyruğa bir event yolluyorum sebebi hem bu yollayacağım eventi
+			//sepet servisim dinleyecek hemde sipariş servisim dinleyecek.
+			//normalde fake paymentta bir command yolluyorduk ordada bir kuyruk ismi tanımlıyoduk
+			//kuyruk ismine eventlerde gerek yok.exchange'E gideceği için exchange'e subcribe olan
+			//farklı mikroservislerim(basket&order) kuyruk oluşturup mesajı alabilecek.
+			await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent()
+			{
+				CourseId = mapValue.Id,
+				UpdatedName = p.Name
+			});
 			return ResponseDto<NoContent>.Success(HttpStatusCode.NoContent.GetHashCode());
 		}
 		public async Task<ResponseDto<NoContent>> DeleteAsync(string id)

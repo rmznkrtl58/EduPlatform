@@ -7,7 +7,7 @@ namespace EduPlatform.Services.FakePayment.Services
 	public class FakePaymentService
 	{
 		//Eventler için geçerlidir :D şuan kullanmaya gerek yok örnek olsun...
-		//private readonly IPublishEndpointProvider _publishEndpoint;
+		//private readonly IPublishEndpoint _publishEndpoint;
 		private readonly ISendEndpointProvider _sendEndpointProvider;
 		public FakePaymentService(ISendEndpointProvider sendEndpointProvider)
 		{

@@ -22,7 +22,7 @@ namespace EduPlatform.Services.Order.Application.Extensions
 
 				//mesajı dinleyeni classı tanımla
 				x.AddConsumer<CreateOrderMessageCommandConsumer>();
-
+				x.AddConsumer<CourseNameChangedEventConsumer>();
 				x.UsingRabbitMq((context, cfg) =>
 				{
 					//Default port:5672
@@ -39,6 +39,14 @@ namespace EduPlatform.Services.Order.Application.Extensions
 					cfg.ReceiveEndpoint("create-order-service", configureEndpoint =>
 					{
 						configureEndpoint.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
+					});
+
+					//catalog servisten aldığım eventim için exchange bağlı kaldığım için
+					//eventlerde dinleyen taraf direk kuyruğu oluşturur kuyruk ismini verip
+					//yapılandırmayı yazdım.
+					cfg.ReceiveEndpoint("course-name-changed-event-order-service", configureEndpoint =>
+					{
+						configureEndpoint.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
 					});
 
 				});
