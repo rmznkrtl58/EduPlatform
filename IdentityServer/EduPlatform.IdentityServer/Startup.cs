@@ -60,6 +60,8 @@ namespace EduPlatform.IdentityServer
 
             //Kullanıcı adı ve şifre kontrolü yapacak olan classımı burada geçiyorum
             builder.AddResourceOwnerValidator<IdentityResourceOwnerPasswordValidator>();
+            //Token Exchange için tokeni doğrulamak için tanımladık.
+            builder.AddExtensionGrantValidator<TokenExchangeExtensionGrantValidator>();
 
 
             // not recommended for production - you need to store your key material somewhere secure

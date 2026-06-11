@@ -1,4 +1,5 @@
-﻿using Ocelot.DependencyInjection;
+﻿using EduPlatform.Gateway.DelegateHandler;
+using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 namespace EduPlatform.Gateway.Extensions
@@ -7,6 +8,10 @@ namespace EduPlatform.Gateway.Extensions
 	{
 		public static IServiceCollection AddOcelotRegistiration(this IServiceCollection services,IConfiguration configuration,WebApplicationBuilder builder)
 		{
+
+			services.AddOcelot()
+				.AddDelegatingHandler<TokenExchangeDelegateHandler>();//TokenExchangeDelegateHandler
+			services.AddHttpClient<TokenExchangeDelegateHandler>();
 			//benim ocelat.development.json dosyamdaki AuthenticationProviderKey değeri burdaki sheme'mı kapsıyor
 			builder.Services.AddAuthentication().AddJwtBearer("GatewayAuthenticationScheme", options =>
 			{
@@ -16,8 +21,7 @@ namespace EduPlatform.Gateway.Extensions
 			});
 			//builder.Services.AddHttpClient<TokenExhangeDelegateHandler>();
 		    builder.Configuration.AddJsonFile($"configuration.{builder.Environment.EnvironmentName.ToLower()}.json");
-			services.AddOcelot();
-			//builder.Services.AddOcelot().AddDelegatingHandler<TokenExhangeDelegateHandler>();
+			
 			return services;
 		}
 		public async static Task<IApplicationBuilder> UseConfigurePipelineExt(this WebApplication app)
