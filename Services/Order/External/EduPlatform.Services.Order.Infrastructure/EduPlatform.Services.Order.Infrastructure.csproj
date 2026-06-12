@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Order\Core\EduPlatform.Services.Order.Application\EduPlatform.Services.Order.Application.csproj" />
+    <ProjectReference Include="..\..\Core\EduPlatform.Services.Order.Application\EduPlatform.Services.Order.Application.csproj" />
   </ItemGroup>
+
+
 
 </Project>

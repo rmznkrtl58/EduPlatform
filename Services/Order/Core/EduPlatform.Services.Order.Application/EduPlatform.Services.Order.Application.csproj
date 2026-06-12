@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\EduPlatform.Shared\EduPlatform.Shared.csproj" />
-    <ProjectReference Include="..\..\..\Core\EduPlatform.Services.Order.Domain\EduPlatform.Services.Order.Domain.csproj" />
+    <ProjectReference Include="..\EduPlatform.Services.Order.Domain\EduPlatform.Services.Order.Domain.csproj" />
   </ItemGroup>
 
 </Project>
