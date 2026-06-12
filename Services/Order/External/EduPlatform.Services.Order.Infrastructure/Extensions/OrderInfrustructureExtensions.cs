@@ -14,6 +14,7 @@ namespace EduPlatform.Services.Order.Infrastructure.Extensions
 		
 			services.AddDbContext<AppDbContext>(opt =>
 			{
+				
 				var sqlConnection = configuration.GetSection(SqlConnectionSettings.Key).Get<SqlConnectionSettings>();
 				opt.UseSqlServer(sqlConnection.SqlServer, act => act.MigrationsAssembly(typeof(InfrastructureAssembly).Assembly.FullName));
 			});

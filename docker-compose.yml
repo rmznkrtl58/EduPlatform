@@ -1,11 +1,63 @@
-version: "4.33"
+version: "4.3"
 services:
-  catalogdb: image:mongo
-  basketdb: image:redis
-  discount: image:postgres
-  identitydb: image:mcr.microsoft.com/mssql/server:2019-latest
-  orderdb: image:mcr.microsoft.com/mssql/server:2019-latest
-  rabbitmq: image:rabbitmq:3.8.14-management
+  catalogdb:
+    image: mongo
+  basketdb:
+    image: redis
+  discountdb:
+    image: postgres
+  identitydb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+  rabbitmq:
+    image: rabbitmq:3.8.14-management
+  catalog.api:
+    image: catalog_api_image
+    build:
+      context: .
+      dockerfile: Services/Catalog/EduPlatform.Services.Catalog/Dockerfile
+  identityserver.api:
+    image: identityserver_api_image
+    build:
+      context: .
+      dockerfile: IdentityServer/EduPlatform.IdentityServer/Dockerfile
+  basket.api:
+    image: basket_api_image
+    build:
+      context: .
+      dockerfile: Services/Basket/EduPlatform.Services.Basket/Dockerfile
+  photostock.api:
+    image: photostock_api_image
+    build:
+      context: .
+      dockerfile: Services/PhotoStock/EduPlatform.Services.PhotoStock/Dockerfile
+  discount.api:
+    image: discount_api_image
+    build:
+      context: .
+      dockerfile: Services/Discount/EduPlatform.Services.Discount/Dockerfile
+  fakepayment.api:
+    image: fakepayment_api_image
+    build:
+      context: .
+      dockerfile: Services/FakePayment/EduPlatform.Services.FakePayment/Dockerfile
+  order.api:
+    image: order_api_image
+    build:
+      context: .
+      dockerfile: Services/Order/Presentation/EduPlatform.Services.Order/Dockerfile
+  gateway.api:
+    image: gateway_api_image
+    build:
+      context: .
+      dockerfile: Gateways/EduPlatform.Gateway/Dockerfile
+  aspnetcoremvc.web:
+    image: aspnetcoremvc.web_image
+    build:
+      context: .
+      dockerfile: Frontends/EduPlatform.Web/Dockerfile
+
 volumes:
   catalogdb_volume:
   discount_volume:

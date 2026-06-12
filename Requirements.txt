@@ -14,3 +14,13 @@ FrontEnd:5010
 UserName = "rmznkrtl",
 Email = "rmznkrtl@gmail.com",
 password:11111Rr*
+
+
+discount Db'im için:
+create table Discount(
+Id serial primary key,
+UserId varchar(200)  not null,
+Rate smallint not null,
+Code  varchar(50)  not null,
+CreatedDate timestamp not null default CURRENT_TIMESTAMP
+)
